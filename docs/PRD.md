@@ -49,33 +49,34 @@ LLM 기반 코딩 에이전트는 다음과 같은 핵심 한계를 가진다:
 ### 3.1 레이어 개요
 
 ```mermaid
-flowchart TB
-    subgraph Feature["Feature Layer (선택적 활성화)"]
-        Ralph["/ralph - Ralph Loop"]
+flowchart LR
+    subgraph Feature["Feature Layer"]
+        Ralph["/ralph"]
     end
 
-    subgraph Hook["Hook Layer (패시브, 항상 동작)"]
-        direction LR
+    subgraph Hook["Hook Layer"]
+        direction TB
         SS["SessionStart"]
         UPS["UserPromptSubmit"]
         PTU["PostToolUse"]
         SE["SessionEnd"]
     end
 
-    subgraph Core["Core Layer (인프라, 항상 동작)"]
-        direction LR
-        Search["Search Engine"]
+    subgraph Core["Core Layer"]
+        direction TB
         Store["Memory Store"]
-        Compress["Compressor"]
+        Search["Search Engine"]
+        DB[(SQLite)]
     end
 
-    subgraph Storage["Storage"]
-        DB[(SQLite + FTS5)]
-    end
-
-    Ralph --> Hook
-    Hook --> Core
-    Core --> Storage
+    Ralph --> Store
+    Ralph --> Search
+    SS --> Store
+    UPS --> Search
+    PTU --> Store
+    SE --> Store
+    Store --> DB
+    Search --> DB
 ```
 
 ### 3.2 레이어 비교
