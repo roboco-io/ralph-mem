@@ -112,9 +112,17 @@ bun add ralph-mem
 
 ### Claude Code 플러그인
 
+Claude Code에서 플러그인으로 사용하려면 [roboco-io/plugins](https://github.com/roboco-io/plugins) 마켓플레이스를 통해 설치합니다:
+
 ```bash
-claude plugins install ralph-mem
+# 1. 마켓플레이스 추가
+/plugin marketplace add roboco-io/plugins
+
+# 2. 플러그인 설치
+/plugin install ralph-mem@roboco-plugins
 ```
+
+또는 `/plugin` 명령으로 플러그인 매니저를 열어 UI에서 설치할 수 있습니다.
 
 ## 사용법
 

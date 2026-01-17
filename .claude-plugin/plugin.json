@@ -1,0 +1,11 @@
+{
+  "name": "ralph-mem",
+  "description": "Ralph Loop 기반 반복 실행 및 세션 간 컨텍스트 영속성 관리",
+  "version": "0.1.0",
+  "author": {
+    "name": "roboco-io"
+  },
+  "homepage": "https://github.com/roboco-io/ralph-mem",
+  "repository": "https://github.com/roboco-io/ralph-mem",
+  "license": "MIT"
+}
