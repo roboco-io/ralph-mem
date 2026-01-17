@@ -11,6 +11,7 @@ import { type DBClient, createDBClient } from "../core/db/client";
 import { ensureProjectDirs, getProjectDBPath } from "../core/db/paths";
 import type { ObservationType } from "../core/db/types";
 import { type Config, loadConfig } from "../utils/config";
+import { isEntirelyPrivate, stripPrivateTags } from "../utils/privacy";
 
 /**
  * Loop context for tool use within Ralph Loop
@@ -228,6 +229,19 @@ export async function postToolUseHook(
 	if (context.error) {
 		content = `Error: ${context.error}\n${content}`;
 	}
+
+	// Check if entire content is wrapped in <private> tags
+	if (isEntirelyPrivate(content)) {
+		return {
+			observationId: null,
+			recorded: false,
+			type: null,
+			importance: 0,
+		};
+	}
+
+	// Strip <private> tagged content
+	content = stripPrivateTags(content);
 
 	// Check privacy exclusions
 	if (shouldExclude(content, config.privacy.exclude_patterns)) {

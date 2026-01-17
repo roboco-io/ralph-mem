@@ -67,6 +67,7 @@ flowchart TB
 
 - `SessionStart` - 관련 메모리 자동 주입
 - `PostToolUse` - 도구 사용 결과 기록
+- `Stop` - 세션 강제 종료 시 정리 작업
 - `SessionEnd` - 세션 요약 생성 및 저장
 
 ### 3. Progressive Disclosure
@@ -167,6 +168,38 @@ Claude Code에서 플러그인으로 사용하려면 [roboco-io/plugins](https:/
 # 특정 메모리 제거
 /mem-forget <observation-id>
 ```
+
+### 4. Privacy 기능
+
+민감한 정보를 메모리에서 제외합니다.
+
+**`<private>` 태그:**
+
+```bash
+# 태그로 감싼 내용은 저장되지 않습니다
+My API key is <private>sk-1234567890</private>
+# 저장됨: My API key is [PRIVATE]
+```
+
+**설정 기반 제외:**
+
+```yaml
+privacy:
+  exclude_patterns:
+    - "*.env"
+    - "*password*"
+    - "*secret*"
+```
+
+### 5. MCP 도구
+
+스킬 외에 MCP(Model Context Protocol) 도구로도 메모리에 접근할 수 있습니다.
+
+| 도구 | 설명 |
+|------|------|
+| `ralph_mem_search` | Progressive Disclosure 기반 검색 |
+| `ralph_mem_timeline` | 특정 관찰 주변 시간순 컨텍스트 |
+| `ralph_mem_get` | 관찰 ID로 전체 상세 조회 |
 
 ## 설정
 

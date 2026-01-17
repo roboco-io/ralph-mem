@@ -11,11 +11,15 @@ export const VERSION = "0.1.0";
 export * from "./core/store";
 export * from "./core/search";
 
-// Hook exports (to be implemented)
+// Hook exports
 export { sessionStartHook } from "./hooks/session-start";
 export { sessionEndHook } from "./hooks/session-end";
 export { userPromptSubmitHook } from "./hooks/user-prompt-submit";
 export { postToolUseHook } from "./hooks/post-tool-use";
+export { stopHook } from "./hooks/stop";
+
+// MCP exports
+export * from "./mcp";
 
 // Skill exports (to be implemented)
 export { ralphSkill } from "./skills/ralph";
@@ -26,9 +30,9 @@ export { memStatusSkill } from "./skills/mem-status";
 
 // Plugin lifecycle
 export async function activate(): Promise<void> {
-  console.log(`ralph-mem v${VERSION} activated`);
+	console.log(`ralph-mem v${VERSION} activated`);
 }
 
 export async function deactivate(): Promise<void> {
-  console.log("ralph-mem deactivated");
+	console.log("ralph-mem deactivated");
 }
