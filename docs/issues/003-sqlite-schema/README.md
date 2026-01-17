@@ -36,34 +36,20 @@ FTS5 전문 검색 인덱스도 포함되어야 합니다.
 
 ## 인수 조건
 
-- [ ] 마이그레이션 실행 시 모든 테이블 생성됨
-- [ ] FTS5 가상 테이블이 정상 생성됨
-- [ ] 트리거가 정상 동작 (observations INSERT → FTS 동기화)
-- [ ] 마이그레이션 버전 추적 가능
-- [ ] 중복 마이그레이션 실행 시 스킵
+- [x] 마이그레이션 실행 시 모든 테이블 생성됨
+- [x] FTS5 가상 테이블이 정상 생성됨
+- [x] 트리거가 정상 동작 (observations INSERT → FTS 동기화)
+- [x] 마이그레이션 버전 추적 가능
+- [x] 중복 마이그레이션 실행 시 스킵
 
 ## 검증 명령
 
 ```bash
 # 마이그레이션 테스트
-bun test src/core/db/__tests__/migrations.test.ts
-
-# 수동 검증
-bun run -e "
-import { runMigrations } from './src/core/db/migrations';
-import Database from 'bun:sqlite';
-
-const db = new Database(':memory:');
-await runMigrations(db);
-
-// 테이블 존재 확인
-const tables = db.query(\"SELECT name FROM sqlite_master WHERE type='table'\").all();
-console.log(tables);
-
-// FTS 동작 확인
-db.run(\"INSERT INTO sessions (id, project_path, started_at) VALUES ('s1', '/test', datetime('now'))\");
-db.run(\"INSERT INTO observations (id, session_id, type, content, created_at) VALUES ('o1', 's1', 'test', 'hello world', datetime('now'))\");
-const fts = db.query(\"SELECT * FROM observations_fts WHERE content MATCH 'hello'\").all();
-console.log('FTS result:', fts);
-"
+bun run test tests/core/db/migrations.test.ts
 ```
+
+## 완료
+
+- **완료일**: 2025-01-17
+- **Evidence**: [evidence.md](./evidence.md)
