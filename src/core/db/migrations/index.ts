@@ -9,17 +9,17 @@ import type Database from "better-sqlite3";
 import type { Migration } from "../types";
 
 export interface MigrationDefinition {
-  version: number;
-  name: string;
-  up: string;
+	version: number;
+	name: string;
+	up: string;
 }
 
 // All migrations in order
 export const MIGRATIONS: MigrationDefinition[] = [
-  {
-    version: 1,
-    name: "initial",
-    up: `
+	{
+		version: 1,
+		name: "initial",
+		up: `
       -- Sessions table
       CREATE TABLE IF NOT EXISTS sessions (
         id TEXT PRIMARY KEY,
@@ -98,14 +98,27 @@ export const MIGRATIONS: MigrationDefinition[] = [
       CREATE INDEX IF NOT EXISTS idx_loop_session ON loop_runs(session_id);
       CREATE INDEX IF NOT EXISTS idx_loop_status ON loop_runs(status);
     `,
-  },
+	},
+	{
+		version: 2,
+		name: "add_loop_context_to_observations",
+		up: `
+      -- Add loop context columns to observations
+      ALTER TABLE observations ADD COLUMN loop_run_id TEXT REFERENCES loop_runs(id) ON DELETE SET NULL;
+      ALTER TABLE observations ADD COLUMN iteration INTEGER;
+
+      -- Index for loop-related queries
+      CREATE INDEX IF NOT EXISTS idx_obs_loop_run ON observations(loop_run_id);
+      CREATE INDEX IF NOT EXISTS idx_obs_iteration ON observations(iteration);
+    `,
+	},
 ];
 
 /**
  * Initialize migration tracking table
  */
 export function initMigrationTable(db: Database.Database): void {
-  db.exec(`
+	db.exec(`
     CREATE TABLE IF NOT EXISTS _migrations (
       version INTEGER PRIMARY KEY,
       name TEXT NOT NULL,
@@ -118,71 +131,71 @@ export function initMigrationTable(db: Database.Database): void {
  * Get list of applied migrations
  */
 export function getAppliedMigrations(db: Database.Database): Migration[] {
-  const stmt = db.prepare(
-    "SELECT version, name, applied_at FROM _migrations ORDER BY version"
-  );
-  return stmt.all() as Migration[];
+	const stmt = db.prepare(
+		"SELECT version, name, applied_at FROM _migrations ORDER BY version",
+	);
+	return stmt.all() as Migration[];
 }
 
 /**
  * Get current schema version
  */
 export function getCurrentVersion(db: Database.Database): number {
-  const result = db
-    .prepare("SELECT MAX(version) as max_version FROM _migrations")
-    .get() as { max_version: number | null } | undefined;
-  return result?.max_version ?? 0;
+	const result = db
+		.prepare("SELECT MAX(version) as max_version FROM _migrations")
+		.get() as { max_version: number | null } | undefined;
+	return result?.max_version ?? 0;
 }
 
 /**
  * Run pending migrations
  */
 export function runMigrations(db: Database.Database): {
-  applied: string[];
-  currentVersion: number;
+	applied: string[];
+	currentVersion: number;
 } {
-  initMigrationTable(db);
+	initMigrationTable(db);
 
-  const currentVersion = getCurrentVersion(db);
-  const applied: string[] = [];
+	const currentVersion = getCurrentVersion(db);
+	const applied: string[] = [];
 
-  for (const migration of MIGRATIONS) {
-    if (migration.version > currentVersion) {
-      // Run migration in a transaction
-      const transaction = db.transaction(() => {
-        // Execute migration SQL
-        db.exec(migration.up);
+	for (const migration of MIGRATIONS) {
+		if (migration.version > currentVersion) {
+			// Run migration in a transaction
+			const transaction = db.transaction(() => {
+				// Execute migration SQL
+				db.exec(migration.up);
 
-        // Record migration
-        db.prepare("INSERT INTO _migrations (version, name) VALUES (?, ?)").run(
-          migration.version,
-          migration.name
-        );
-      });
+				// Record migration
+				db.prepare("INSERT INTO _migrations (version, name) VALUES (?, ?)").run(
+					migration.version,
+					migration.name,
+				);
+			});
 
-      try {
-        transaction();
-        applied.push(`${migration.version}_${migration.name}`);
-      } catch (error) {
-        throw new Error(
-          `Migration ${migration.version}_${migration.name} failed: ${error}`
-        );
-      }
-    }
-  }
+			try {
+				transaction();
+				applied.push(`${migration.version}_${migration.name}`);
+			} catch (error) {
+				throw new Error(
+					`Migration ${migration.version}_${migration.name} failed: ${error}`,
+				);
+			}
+		}
+	}
 
-  return {
-    applied,
-    currentVersion: getCurrentVersion(db),
-  };
+	return {
+		applied,
+		currentVersion: getCurrentVersion(db),
+	};
 }
 
 /**
  * Check if migrations are needed
  */
 export function needsMigration(db: Database.Database): boolean {
-  initMigrationTable(db);
-  const currentVersion = getCurrentVersion(db);
-  const latestVersion = MIGRATIONS[MIGRATIONS.length - 1]?.version ?? 0;
-  return currentVersion < latestVersion;
+	initMigrationTable(db);
+	const currentVersion = getCurrentVersion(db);
+	const latestVersion = MIGRATIONS[MIGRATIONS.length - 1]?.version ?? 0;
+	return currentVersion < latestVersion;
 }

@@ -33,6 +33,7 @@ export interface DBClient {
 	createObservation(data: Omit<CreateObservation, "id">): Observation;
 	getObservation(id: string): Observation | null;
 	listObservations(sessionId: string, limit?: number): Observation[];
+	listObservationsByLoopRun(loopRunId: string, limit?: number): Observation[];
 	deleteObservation(id: string): void;
 
 	// Loop CRUD
@@ -154,8 +155,8 @@ export function createDBClient(dbPath: string | ":memory:"): DBClient {
 			const now = new Date().toISOString();
 
 			db.prepare(`
-        INSERT INTO observations (id, session_id, type, tool_name, content, importance, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO observations (id, session_id, type, tool_name, content, importance, created_at, loop_run_id, iteration)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).run(
 				id,
 				data.session_id,
@@ -164,6 +165,8 @@ export function createDBClient(dbPath: string | ":memory:"): DBClient {
 				data.content,
 				data.importance ?? 0.5,
 				data.created_at ?? now,
+				data.loop_run_id ?? null,
+				data.iteration ?? null,
 			);
 
 			// biome-ignore lint/style/noNonNullAssertion: we just inserted this row
@@ -173,7 +176,7 @@ export function createDBClient(dbPath: string | ":memory:"): DBClient {
 		getObservation(id: string): Observation | null {
 			const row = db
 				.prepare(`
-        SELECT id, session_id, type, tool_name, content, content_compressed, embedding, importance, created_at
+        SELECT id, session_id, type, tool_name, content, content_compressed, embedding, importance, created_at, loop_run_id, iteration
         FROM observations WHERE id = ?
       `)
 				.get(id) as Observation | undefined;
@@ -184,13 +187,25 @@ export function createDBClient(dbPath: string | ":memory:"): DBClient {
 		listObservations(sessionId: string, limit = 100): Observation[] {
 			return db
 				.prepare(`
-        SELECT id, session_id, type, tool_name, content, content_compressed, embedding, importance, created_at
+        SELECT id, session_id, type, tool_name, content, content_compressed, embedding, importance, created_at, loop_run_id, iteration
         FROM observations
         WHERE session_id = ?
         ORDER BY created_at DESC
         LIMIT ?
       `)
 				.all(sessionId, limit) as Observation[];
+		},
+
+		listObservationsByLoopRun(loopRunId: string, limit = 100): Observation[] {
+			return db
+				.prepare(`
+        SELECT id, session_id, type, tool_name, content, content_compressed, embedding, importance, created_at, loop_run_id, iteration
+        FROM observations
+        WHERE loop_run_id = ?
+        ORDER BY iteration ASC, created_at ASC
+        LIMIT ?
+      `)
+				.all(loopRunId, limit) as Observation[];
 		},
 
 		deleteObservation(id: string): void {

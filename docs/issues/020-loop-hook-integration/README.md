@@ -41,18 +41,22 @@ Ralph Loop 실행 중에도 Hook Layer가 정상 동작해야 합니다.
 
 ## 인수 조건
 
-- [ ] Loop 중 도구 사용 시 loop_run_id 기록
-- [ ] iteration 번호 정확히 기록
-- [ ] 이전 iteration 결과 컨텍스트 주입
-- [ ] Loop 완료 시 요약 observation 생성
+- [x] Loop 중 도구 사용 시 loop_run_id 기록
+- [x] iteration 번호 정확히 기록
+- [x] 이전 iteration 결과 컨텍스트 주입
+- [x] Loop 완료 시 요약 observation 생성
 
 ## 검증 명령
 
 ```bash
-bun test src/features/ralph/__tests__/hook-integration.test.ts
+bun test tests/features/ralph/hook-integration.test.ts
 
 # 테스트 케이스
 # - Loop 중 PostToolUse → loop_run_id 포함
 # - 이전 iteration 결과 검색 가능
 # - Loop 완료 후 요약 존재
 ```
+
+## Evidence
+
+- [evidence.md](./evidence.md)

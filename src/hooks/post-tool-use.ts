@@ -12,6 +12,14 @@ import { ensureProjectDirs, getProjectDBPath } from "../core/db/paths";
 import type { ObservationType } from "../core/db/types";
 import { type Config, loadConfig } from "../utils/config";
 
+/**
+ * Loop context for tool use within Ralph Loop
+ */
+export interface LoopContext {
+	runId: string;
+	iteration: number;
+}
+
 export interface PostToolUseContext {
 	toolName: string;
 	toolInput: unknown;
@@ -20,6 +28,7 @@ export interface PostToolUseContext {
 	projectPath: string;
 	success: boolean;
 	error?: string;
+	loopContext?: LoopContext;
 }
 
 export interface PostToolUseResult {
@@ -264,6 +273,8 @@ export async function postToolUseHook(
 		tool_name: toolName,
 		content,
 		importance,
+		loop_run_id: context.loopContext?.runId,
+		iteration: context.loopContext?.iteration,
 	});
 
 	// Close if we created the client

@@ -45,10 +45,25 @@ export type IterationCallback = (
 
 export type CompleteCallback = (result: LoopResult) => void;
 
+export type IterationStartCallback = (context: IterationContext) => void;
+export type IterationEndCallback = (
+	context: IterationContext,
+	result: IterationResult,
+) => void;
+
+/**
+ * Loop context for use with hooks
+ */
+export interface LoopHookContext {
+	runId: string;
+	iteration: number;
+}
+
 export interface LoopEngine {
 	// State
 	isRunning(): boolean;
 	getCurrentRun(): LoopRun | null;
+	getLoopContext(): LoopHookContext | null;
 
 	// Control
 	start(task: string, options?: LoopOptions): Promise<LoopResult>;
@@ -57,6 +72,8 @@ export interface LoopEngine {
 	// Events
 	onIteration(callback: IterationCallback): void;
 	onComplete(callback: CompleteCallback): void;
+	onIterationStart(callback: IterationStartCallback): void;
+	onIterationEnd(callback: IterationEndCallback): void;
 
 	// Cleanup
 	close(): void;
@@ -95,6 +112,9 @@ export function createLoopEngine(
 	let stopRequested = false;
 	let iterationCallback: IterationCallback | null = null;
 	let completeCallback: CompleteCallback | null = null;
+	let iterationStartCallback: IterationStartCallback | null = null;
+	let iterationEndCallback: IterationEndCallback | null = null;
+	let currentIteration = 0;
 
 	/**
 	 * End the current loop run with status
@@ -112,6 +132,39 @@ export function createLoopEngine(
 		currentLoopRun = client.getLoopRun(currentLoopRun.id);
 	}
 
+	/**
+	 * Create summary observation for loop completion
+	 */
+	function createLoopSummary(
+		loopRunId: string,
+		task: string,
+		result: LoopResult,
+	): void {
+		const statusText =
+			result.reason === "success"
+				? "성공"
+				: result.reason === "max_iterations"
+					? "최대 반복 도달"
+					: result.reason === "stopped"
+						? "중단됨"
+						: "오류";
+
+		const content = `Ralph Loop 완료
+태스크: ${task}
+상태: ${statusText}
+반복: ${result.iterations}회
+${result.error ? `오류: ${result.error}` : ""}`.trim();
+
+		client.createObservation({
+			session_id: sessionId,
+			type: result.success ? "success" : "note",
+			content,
+			importance: result.success ? 0.9 : 0.7,
+			loop_run_id: loopRunId,
+			iteration: result.iterations,
+		});
+	}
+
 	return {
 		isRunning(): boolean {
 			return currentLoopRun !== null && currentLoopRun.status === "running";
@@ -121,6 +174,16 @@ export function createLoopEngine(
 			if (!currentLoopRun) return null;
 			// Refresh from DB
 			return client.getLoopRun(currentLoopRun.id);
+		},
+
+		getLoopContext(): LoopHookContext | null {
+			if (!currentLoopRun || currentLoopRun.status !== "running") {
+				return null;
+			}
+			return {
+				runId: currentLoopRun.id,
+				iteration: currentIteration,
+			};
 		},
 
 		async start(task: string, loopOptions?: LoopOptions): Promise<LoopResult> {
@@ -166,14 +229,27 @@ export function createLoopEngine(
 							reason: "stopped",
 							loopRunId,
 						};
+						createLoopSummary(loopRunId, task, result);
 						if (completeCallback) completeCallback(result);
 						return result;
 					}
 
 					iteration++;
+					currentIteration = iteration;
 
 					// Update iteration count
 					client.updateLoopRun(loopRunId, { iterations: iteration });
+
+					const iterationContext: IterationContext = {
+						iteration,
+						task,
+						loopRunId,
+					};
+
+					// Call iteration start callback
+					if (iterationStartCallback) {
+						iterationStartCallback(iterationContext);
+					}
 
 					// Call iteration callback
 					if (!iterationCallback) {
@@ -182,11 +258,12 @@ export function createLoopEngine(
 						);
 					}
 
-					const iterationResult = await iterationCallback({
-						iteration,
-						task,
-						loopRunId,
-					});
+					const iterationResult = await iterationCallback(iterationContext);
+
+					// Call iteration end callback
+					if (iterationEndCallback) {
+						iterationEndCallback(iterationContext, iterationResult);
+					}
 
 					// Check success
 					if (iterationResult.success) {
@@ -197,6 +274,7 @@ export function createLoopEngine(
 							reason: "success",
 							loopRunId,
 						};
+						createLoopSummary(loopRunId, task, result);
 						if (completeCallback) completeCallback(result);
 						return result;
 					}
@@ -221,6 +299,7 @@ export function createLoopEngine(
 					loopRunId,
 					error: lastError,
 				};
+				createLoopSummary(loopRunId, task, result);
 				if (completeCallback) completeCallback(result);
 				return result;
 			} catch (error) {
@@ -235,6 +314,7 @@ export function createLoopEngine(
 					loopRunId,
 					error: errorMessage,
 				};
+				createLoopSummary(loopRunId, task, result);
 				if (completeCallback) completeCallback(result);
 				return result;
 			}
@@ -256,6 +336,14 @@ export function createLoopEngine(
 
 		onComplete(callback: CompleteCallback): void {
 			completeCallback = callback;
+		},
+
+		onIterationStart(callback: IterationStartCallback): void {
+			iterationStartCallback = callback;
+		},
+
+		onIterationEnd(callback: IterationEndCallback): void {
+			iterationEndCallback = callback;
 		},
 
 		close(): void {
