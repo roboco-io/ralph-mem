@@ -1,7 +1,6 @@
 # ralph-mem
 
 [![npm version](https://img.shields.io/npm/v/ralph-mem.svg)](https://www.npmjs.com/package/ralph-mem)
-[![npm downloads](https://img.shields.io/npm/dm/ralph-mem.svg)](https://www.npmjs.com/package/ralph-mem)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg)](https://www.typescriptlang.org/)
 [![Bun](https://img.shields.io/badge/Bun-1.0+-black.svg)](https://bun.sh/)

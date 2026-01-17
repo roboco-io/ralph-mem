@@ -146,8 +146,75 @@ bun run lint:fix     # Biome lint 자동 수정
 
 ## 현재 상태
 
-- **Phase 1 (Core Layer)**: Issue #001 완료
-- 다음 작업: #002 plugin.json, #003 SQLite 스키마, #005 설정 시스템 (병렬 가능)
+- **v0.1.0 릴리즈 완료** (2025-01-17)
+- 전체 30개 이슈 완료 (Phase 1-4)
+- npm 배포: <https://www.npmjs.com/package/ralph-mem>
+- GitHub: <https://github.com/roboco-io/ralph-mem>
+
+## 릴리즈
+
+### 자동 릴리즈 (권장)
+
+Git 태그를 푸시하면 GitHub Actions가 자동으로 릴리즈를 생성하고 npm에 배포합니다.
+
+```bash
+# 1. 버전 업데이트 (package.json, CHANGELOG.md)
+npm version patch  # 또는 minor, major
+
+# 2. 태그 푸시 (릴리즈 자동 트리거)
+git push origin main --tags
+```
+
+**자동 실행 내용:**
+
+- GitHub Release 생성 (CHANGELOG.md에서 릴리즈 노트 추출)
+- npm 배포
+
+### 수동 릴리즈
+
+```bash
+# 1. 버전 업데이트
+npm version patch
+
+# 2. 빌드 및 테스트
+bun run build
+bun run test
+
+# 3. GitHub Release 생성
+git push origin main --tags
+gh release create v0.1.1 --generate-notes
+
+# 4. npm 배포
+npm publish --access public
+```
+
+### CHANGELOG 작성 규칙
+
+`CHANGELOG.md`에 릴리즈 노트를 다음 형식으로 작성:
+
+```markdown
+## [0.1.1] - 2025-01-20
+
+### Added
+- 새로운 기능
+
+### Changed
+- 변경된 기능
+
+### Fixed
+- 버그 수정
+```
+
+### CI/CD 파이프라인
+
+| 워크플로우 | 트리거 | 내용 |
+|-----------|--------|------|
+| CI ([ci.yml](.github/workflows/ci.yml)) | PR, push to main | typecheck, lint, test, build |
+| Release ([release.yml](.github/workflows/release.yml)) | tag push (v*) | GitHub Release + npm publish |
+
+### 필요한 Secrets
+
+- `NPM_TOKEN`: npm 배포용 액세스 토큰 (GitHub Repository Settings > Secrets)
 
 ## 컨텍스트 자동 주입
 
