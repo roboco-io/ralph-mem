@@ -46,21 +46,20 @@ Session과 Observation의 생명주기를 관리하고 토큰 카운트를 추�
 
 ## 인수 조건
 
-- [ ] createSession → getCurrentSession 일치
-- [ ] addObservation 후 getObservation 성공
-- [ ] endSession 후 getCurrentSession null
-- [ ] getRecentObservations 최신순 정렬
-- [ ] getTokenCount 누적 정확
-- [ ] summarizeAndDelete 정상 동작
+- [x] createSession → getCurrentSession 일치
+- [x] addObservation 후 getObservation 성공
+- [x] endSession 후 getCurrentSession null
+- [x] getRecentObservations 최신순 정렬
+- [x] getTokenCount 누적 정확
+- [x] summarizeAndDelete 정상 동작
 
 ## 검증 명령
 
 ```bash
-bun test src/core/__tests__/store.test.ts
-
-# 테스트 케이스
-# - 세션 생성/종료 생명주기
-# - Observation 추가 및 조회
-# - 토큰 카운트 누적
-# - 오래된 데이터 정리
+bun run test tests/core/store.test.ts
 ```
+
+## 완료
+
+- **완료일**: 2025-01-17
+- **Evidence**: [evidence.md](./evidence.md)
