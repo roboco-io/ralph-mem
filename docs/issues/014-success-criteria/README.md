@@ -53,12 +53,16 @@ test_pass, build_success 등 다양한 기준을 지원합니다.
 
 ## 인수 조건
 
-- [ ] test_pass 평가 동작
-- [ ] build_success 평가 동작
-- [ ] custom 명령 평가 동작
-- [ ] 명령 실패 시 실패 판정
-- [ ] Claude 판단 결과 반영
-- [ ] 타임아웃 처리
+- [x] test_pass 평가 동작
+- [x] build_success 평가 동작
+- [x] custom 명령 평가 동작
+- [x] 명령 실패 시 실패 판정
+- [x] Claude 판단 결과 반영
+- [x] 타임아웃 처리
+
+## Evidence
+
+[완료 검증 문서](./evidence.md)
 
 ## 검증 명령
 
