@@ -38,6 +38,8 @@ export type LogLevel = "debug" | "info" | "warn" | "error";
  */
 export interface RalphConfig {
 	max_iterations: number;
+	max_duration_ms: number;
+	no_progress_threshold: number;
 	context_budget: number;
 	cooldown_ms: number;
 	success_criteria: SuccessCriteria[];
@@ -93,6 +95,8 @@ export interface Config {
 export const DEFAULT_CONFIG: Config = {
 	ralph: {
 		max_iterations: 10,
+		max_duration_ms: 1800000, // 30 minutes
+		no_progress_threshold: 3,
 		context_budget: 50000,
 		cooldown_ms: 1000,
 		success_criteria: [{ type: "test_pass" }],
