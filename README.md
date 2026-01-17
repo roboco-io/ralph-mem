@@ -10,7 +10,9 @@ Claude Code를 위한 Ralph Loop 기반 지속적 컨텍스트 관리 플러그�
 
 ## 개요
 
-ralph-mem은 [Ralph Loop](https://ghuntley.com/ralph/)의 "성공할 때까지 반복" 철학과 [claude-mem](https://github.com/thedotmack/claude-mem)의 "지능적 컨텍스트 관리"를 결합한 Claude Code 플러그인입니다.
+ralph-mem은 [Geoffrey Huntley](https://ghuntley.com/)의 [Ralph Loop](https://ghuntley.com/ralph/)와 [thedotmack](https://github.com/thedotmack)의 [claude-mem](https://github.com/thedotmack/claude-mem)에서 영감을 받아 시작된 프로젝트입니다.
+
+Ralph Loop의 "성공할 때까지 반복" 철학과 claude-mem의 "지능적 컨텍스트 관리"를 결합하여 Claude Code를 위한 지속적 메모리 관리 플러그인을 구현했습니다.
 
 ### 해결하는 문제
 
