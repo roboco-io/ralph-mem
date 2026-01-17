@@ -43,11 +43,15 @@ Context budget 초과 시 자동으로 오래된 컨텍스트를 압축해야 �
 
 ## 인수 조건
 
-- [ ] tool_use 압축 동작
-- [ ] bash 출력 압축 동작
-- [ ] error/success 압축 안 함
-- [ ] 압축 결과 저장
-- [ ] 배치 압축 동작
+- [x] tool_use 압축 동작
+- [x] bash 출력 압축 동작
+- [x] error/success 압축 안 함
+- [x] 압축 결과 저장
+- [x] 배치 압축 동작
+
+## Evidence
+
+[evidence.md](evidence.md)
 
 ## 검증 명령
 
