@@ -13,7 +13,8 @@
     "test:coverage": "vitest run --coverage",
     "lint": "bunx @biomejs/biome check src/",
     "lint:fix": "bunx @biomejs/biome check --write src/",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepare": "husky"
   },
   "dependencies": {
     "better-sqlite3": "^12.6.2",
@@ -27,6 +28,8 @@
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.0.0",
     "@vitest/coverage-v8": "^2.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "typescript": "^5.6.0",
     "vitest": "^2.0.0"
   },
@@ -38,5 +41,10 @@
     "ralph-loop"
   ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "bunx @biomejs/biome check --write"
+    ]
+  }
 }
