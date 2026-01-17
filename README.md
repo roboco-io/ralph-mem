@@ -1,5 +1,11 @@
 # ralph-mem
 
+[![npm version](https://img.shields.io/npm/v/ralph-mem.svg)](https://www.npmjs.com/package/ralph-mem)
+[![npm downloads](https://img.shields.io/npm/dm/ralph-mem.svg)](https://www.npmjs.com/package/ralph-mem)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue.svg)](https://www.typescriptlang.org/)
+[![Bun](https://img.shields.io/badge/Bun-1.0+-black.svg)](https://bun.sh/)
+
 Claude Code를 위한 Ralph Loop 기반 지속적 컨텍스트 관리 플러그인
 
 ## 개요
@@ -79,8 +85,33 @@ flowchart TB
 
 ## 설치
 
+### npm
+
 ```bash
-# Claude Code 플러그인으로 설치
+npm install ralph-mem
+```
+
+### yarn
+
+```bash
+yarn add ralph-mem
+```
+
+### pnpm
+
+```bash
+pnpm add ralph-mem
+```
+
+### bun
+
+```bash
+bun add ralph-mem
+```
+
+### Claude Code 플러그인
+
+```bash
 claude plugins install ralph-mem
 ```
 
