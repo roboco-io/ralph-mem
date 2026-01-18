@@ -1,6 +1,6 @@
 {
   "name": "ralph-mem",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Persistent context management plugin for Claude Code with Ralph Loop",
   "main": "dist/index.js",
