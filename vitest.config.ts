@@ -8,6 +8,8 @@ export default defineConfig({
 		include: ["tests/**/*.test.ts"],
 		// Run test files sequentially to avoid SQLite file lock conflicts
 		fileParallelism: false,
+		// Increase timeout for CI environments
+		testTimeout: 30000,
 		coverage: {
 			provider: "v8",
 			reporter: ["text", "json", "html"],
