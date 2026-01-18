@@ -129,17 +129,14 @@ Claude Code에서 플러그인으로 사용하려면 [roboco-io/plugins](https:/
 
 ### 플러그인 업데이트
 
-방법 1: CLI 명령으로 업데이트 (터미널에서 실행)
+1. 마켓플레이스 업데이트
 ```
-claude plugin update ralph-mem@roboco-plugins
+claude plugin marketplace update roboco-plugins
 ```
 
-방법 2: 재설치 (세션 내에서 실행)
+2. 플러그인 업데이트
 ```
-/plugin uninstall ralph-mem
-```
-```
-/plugin install ralph-mem@roboco-plugins
+claude plugin update ralph-mem@roboco-plugins
 ```
 
 업데이트 후 Claude Code를 재시작하면 변경 사항이 적용됩니다.
