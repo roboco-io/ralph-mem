@@ -270,7 +270,7 @@ describe("Success Criteria Evaluator", () => {
 				evaluator = createCriteriaEvaluator();
 				const criteria: SuccessCriteria = {
 					type: "custom",
-					command: "sleep 10",
+					command: "sleep 2",
 					timeout: 100,
 				};
 
@@ -298,7 +298,7 @@ describe("Success Criteria Evaluator", () => {
 				evaluator = createCriteriaEvaluator();
 				const criteria: SuccessCriteria = {
 					type: "custom",
-					command: "sleep 10",
+					command: "sleep 2",
 					timeout: 100,
 				};
 
@@ -312,7 +312,7 @@ describe("Success Criteria Evaluator", () => {
 				evaluator = createCriteriaEvaluator();
 				const criteria: SuccessCriteria = {
 					type: "custom",
-					command: "sleep 10",
+					command: "sleep 2",
 					timeout: 100,
 				};
 
@@ -444,7 +444,7 @@ describe("Success Criteria Evaluator", () => {
 			const evaluator = createCriteriaEvaluatorWithClaude(mockJudge);
 			const criteria: SuccessCriteria = {
 				type: "custom",
-				command: "sleep 10",
+				command: "sleep 2",
 				timeout: 100,
 			};
 
