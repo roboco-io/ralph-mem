@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2025-01-18
+
+### Fixed
+- Hook 명령어가 사용자 프로젝트 디렉토리에서 실행될 때 MODULE_NOT_FOUND 오류 발생 문제 수정 (`$CLAUDE_PLUGIN_ROOT` 절대 경로 사용)
+- Bun bundler duplicate export 버그 워크어라운드 추가
+
+### Changed
+- Claude Code 플러그인 구조를 공식 스키마로 재구성
+- 플러그인 업데이트 안내 문서 개선
+
+### Added
+- commands 폴더 추가로 슬래시 명령어 등록 방식 개선
+- README에 플러그인 업데이트 방법과 동작 원리 섹션 추가
+- GitHub Actions CI/CD 워크플로우
+
 ## [0.1.0] - 2025-01-17
 
 ### Added
