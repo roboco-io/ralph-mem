@@ -128,10 +128,10 @@ Claude Code에서 플러그인으로 사용하려면 [roboco-io/plugins](https:/
 ### 플러그인 업데이트
 
 ```bash
-# 최신 버전으로 업데이트
-/plugin update ralph-mem
+# 방법 1: CLI 명령으로 업데이트 (터미널에서 실행)
+claude plugin update ralph-mem@roboco-plugins
 
-# 또는 재설치
+# 방법 2: 재설치 (세션 내에서 실행)
 /plugin uninstall ralph-mem
 /plugin install ralph-mem@roboco-plugins
 ```
