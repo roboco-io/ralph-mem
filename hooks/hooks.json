@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node $CLAUDE_PLUGIN_ROOT/dist/hooks/post-tool-use.js"
+            "command": "bun $CLAUDE_PLUGIN_ROOT/dist/hooks/post-tool-use.js"
           }
         ]
       }
@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node $CLAUDE_PLUGIN_ROOT/dist/hooks/stop.js"
+            "command": "bun $CLAUDE_PLUGIN_ROOT/dist/hooks/stop.js"
           }
         ]
       }
